@@ -1,0 +1,251 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Unkey
+providerId: unkey-dev
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- API Keys
+- Rate Limiting
+- Authentication
+- Open Source
+- Plans
+description: >-
+  Unkey has two consumption models. The core platform is open source (AGPL) and
+  free to self-host, in which case cost is your own infrastructure with no vendor
+  invoice. Unkey's managed offering is subscription plus usage-based: a Free tier
+  to get started, then Starter ($5/mo), Pro ($25/mo), and Business ($50/mo)
+  tiers, each of which includes an equal amount of monthly usage credits and
+  raises per-instance resource limits, regions, team seats, and log/audit
+  retention. Above the included credits, spend follows real usage metered on
+  compute (vCPU-seconds), memory (GB-seconds), and egress (GB). An Enterprise
+  tier offers custom limits, dedicated infrastructure, and a dedicated Slack
+  channel.
+notes: >-
+  Unkey's public pricing page reflects its "ship APIs, not infrastructure"
+  deploy platform, priced on subscription + usage credits + metered compute. The
+  underlying key-management, rate limiting, identities, and analytics APIs at
+  api.unkey.com / api.unkey.dev are exercised within these plans. Verify current
+  tiers, included credits, and per-unit rates on the pricing page during
+  reconciliation.
+sources:
+- https://www.unkey.com/pricing
+- https://www.unkey.com/docs
+- https://github.com/unkeyed/unkey
+plans:
+- id: unkey-self-hosted
+  name: Open Source (Self-Hosted)
+  type: free
+  description: >-
+    The full Unkey platform, AGPL-licensed and self-hostable. Includes API key
+    management, standalone rate limiting, identities, RBAC, and analytics.
+    Bounded only by your own infrastructure, with no Unkey invoice.
+  entries:
+  - label: Self-Hosted Usage
+    name: self_hosted_usage
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free (self-hosted; you provide infrastructure)
+    userMultiplied: false
+  elements:
+  - name: API Key Management
+  - name: Rate Limiting
+  - name: Identities
+  - name: Permissions and Roles
+  - name: Analytics
+- id: unkey-free
+  name: Free
+  type: free
+  description: >-
+    Free-forever managed tier for getting started, with a bounded per-instance
+    resource allowance and limited regions and retention.
+  entries:
+  - label: Instance Resources
+    name: free_instance
+    type: usage
+    metric: instances
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $0 (0.25 vCPU / 0.25 GB per instance, 1 concurrent build)
+    userMultiplied: false
+  elements:
+  - name: Managed Hosting
+  - name: 1 Concurrent Build
+  - name: Core API Key and Ratelimit APIs
+- id: unkey-starter
+  name: Starter
+  type: paid
+  description: >-
+    Entry paid tier at $5/month including $5 of monthly usage credits, custom
+    domains, up to 2 vCPU / 2 GB per instance, 3 regions, 1 team member, 3-day
+    log retention, and 7-day audit log retention.
+  entries:
+  - label: Subscription
+    name: starter_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '5.00'
+    currency: USD
+    userMultiplied: false
+  - label: Included Usage Credits
+    name: starter_credits
+    type: usage
+    metric: credits
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $5 of usage credits included
+    userMultiplied: false
+  elements:
+  - name: Custom Domains
+  - name: Up to 2 vCPU / 2 GB per Instance
+  - name: 3 Regions
+  - name: Email Support
+- id: unkey-pro
+  name: Pro
+  type: paid
+  description: >-
+    $25/month including $25 of monthly usage credits, up to 8 vCPU / 8 GB per
+    instance, all regions, unlimited team members, 7-day log retention, and
+    14-day audit log retention.
+  entries:
+  - label: Subscription
+    name: pro_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '25.00'
+    currency: USD
+    userMultiplied: false
+  - label: Included Usage Credits
+    name: pro_credits
+    type: usage
+    metric: credits
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $25 of usage credits included
+    userMultiplied: false
+  elements:
+  - name: Up to 8 vCPU / 8 GB per Instance
+  - name: All Regions
+  - name: Unlimited Team Members
+  - name: Custom Domains
+- id: unkey-business
+  name: Business
+  type: paid
+  description: >-
+    $50/month including $50 of monthly usage credits, up to 32 vCPU / 32 GB per
+    instance, all regions, unlimited team members, 14-day log retention, and
+    30-day audit log retention.
+  entries:
+  - label: Subscription
+    name: business_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '50.00'
+    currency: USD
+    userMultiplied: false
+  - label: Included Usage Credits
+    name: business_credits
+    type: usage
+    metric: credits
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $50 of usage credits included
+    userMultiplied: false
+  elements:
+  - name: Up to 32 vCPU / 32 GB per Instance
+  - name: All Regions
+  - name: 30-Day Audit Log Retention
+- id: unkey-usage
+  name: Usage-Based Metering
+  type: usage
+  description: >-
+    On top of any paid subscription, spend follows real usage above the included
+    monthly credits, metered on compute, memory, and egress.
+  entries:
+  - label: Compute
+    name: vcpu_seconds
+    type: usage
+    metric: vcpu_seconds
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '0.000006944'
+    currency: USD
+    userMultiplied: false
+  - label: Memory
+    name: memory_gb_seconds
+    type: usage
+    metric: gb_seconds
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '0.000003472'
+    currency: USD
+    userMultiplied: false
+  - label: Egress
+    name: egress_gb
+    type: usage
+    metric: bytes
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1073741824
+    price: '0.05'
+    currency: USD
+    userMultiplied: false
+  elements:
+  - name: Pay for What You Use
+  - name: No Plan Jumps
+- id: unkey-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Custom plan with custom resource limits, dedicated infrastructure, a
+    dedicated Slack channel, security review, and negotiated terms. Contact
+    Unkey.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Resource Limits
+  - name: Dedicated Infrastructure
+  - name: Dedicated Slack Channel
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

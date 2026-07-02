@@ -1,0 +1,149 @@
+aid: unkey-dev
+name: Unkey
+review:
+  question: Does Unkey expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-02'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Unkey's public API is an RPC-style REST
+    API in which every operation is a request/response HTTP POST (for example
+    POST /v2/keys.verifyKey). There is no server-push transport - no WebSocket
+    and no Server-Sent Events - on Unkey's own API to model. Unkey does emit
+    events to customers via outbound webhooks (server-to-endpoint HTTP), but
+    those are ordinary HTTP callbacks, not a bidirectional or streaming socket,
+    and are configured/consumed on the customer's own endpoint.
+findings:
+  summary: |
+    Unkey does not publish a documented public WebSocket API. Unkey is an
+    open-source developer platform for API key management, authentication, and
+    rate limiting. Its public API is RPC-style REST: all operations are HTTP
+    POST calls grouped into service namespaces (keys, apis, ratelimit,
+    identities, permissions, analytics, deploy, liveness). The stable v2 API is
+    served from https://api.unkey.com under /v2/* paths; a legacy v1 API is
+    served from https://api.unkey.dev under /v1/* paths. Authentication is HTTP
+    Bearer with a root key (Authorization: Bearer unkey_xxx). Responses use a
+    consistent envelope (meta.requestId + data, plus pagination on list
+    endpoints, or a structured error object). No realtime, bidirectional, or
+    streaming WebSocket (ws:// or wss://) endpoint is documented anywhere in
+    Unkey's API reference. Server-push to customers is delivered via outbound
+    webhooks, not WebSocket.
+  openSource: |
+    The full Unkey platform is open source (AGPL-3.0) and self-hostable
+    (github.com/unkeyed/unkey, written primarily in Go). A managed offering runs
+    the same platform under a subscription-plus-usage pricing model. Both the
+    self-hosted and managed variants expose the same RPC-style REST API surface.
+  apiVersions: |
+    v2 is current (base https://api.unkey.com, /v2/* paths) and is what this
+    entry primarily models. v1 is legacy (base https://api.unkey.dev, /v1/*
+    paths); it exposes an equivalent surface with slightly different naming (for
+    example /v1/identities.create vs /v2/identities.createIdentity, and
+    /v1/ratelimits.* vs /v2/ratelimit.*). Unkey publishes a v1-to-v2 migration
+    guide.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.unkey.com
+      documented: true
+      note: RPC-style v2 API; every operation is an HTTP POST to /v2/<namespace>.<method>.
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.unkey.dev
+      documented: true
+      note: Legacy v1 API under /v1/* paths.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound webhooks POST key/identity events to a customer-configured HTTP endpoint. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in Unkey's API reference (v1 or v2) as of the review date.
+  endpointsConfirmed:
+    - POST https://api.unkey.com/v2/keys.createKey
+    - POST https://api.unkey.com/v2/keys.verifyKey
+    - POST https://api.unkey.com/v2/keys.getKey
+    - POST https://api.unkey.com/v2/keys.updateKey
+    - POST https://api.unkey.com/v2/keys.deleteKey
+    - POST https://api.unkey.com/v2/keys.rerollKey
+    - POST https://api.unkey.com/v2/keys.updateCredits
+    - POST https://api.unkey.com/v2/keys.whoami
+    - POST https://api.unkey.com/v2/keys.migrateKeys
+    - POST https://api.unkey.com/v2/keys.addPermissions
+    - POST https://api.unkey.com/v2/keys.removePermissions
+    - POST https://api.unkey.com/v2/keys.setPermissions
+    - POST https://api.unkey.com/v2/keys.addRoles
+    - POST https://api.unkey.com/v2/keys.removeRoles
+    - POST https://api.unkey.com/v2/keys.setRoles
+    - POST https://api.unkey.com/v2/apis.createApi
+    - POST https://api.unkey.com/v2/apis.getApi
+    - POST https://api.unkey.com/v2/apis.deleteApi
+    - POST https://api.unkey.com/v2/apis.listKeys
+    - POST https://api.unkey.com/v2/ratelimit.limit
+    - POST https://api.unkey.com/v2/ratelimit.multiLimit
+    - POST https://api.unkey.com/v2/ratelimit.setOverride
+    - POST https://api.unkey.com/v2/ratelimit.getOverride
+    - POST https://api.unkey.com/v2/ratelimit.listOverrides
+    - POST https://api.unkey.com/v2/ratelimit.deleteOverride
+    - POST https://api.unkey.com/v2/identities.createIdentity
+    - POST https://api.unkey.com/v2/identities.getIdentity
+    - POST https://api.unkey.com/v2/identities.listIdentities
+    - POST https://api.unkey.com/v2/identities.updateIdentity
+    - POST https://api.unkey.com/v2/identities.deleteIdentity
+    - POST https://api.unkey.com/v2/permissions.createPermission
+    - POST https://api.unkey.com/v2/permissions.getPermission
+    - POST https://api.unkey.com/v2/permissions.listPermissions
+    - POST https://api.unkey.com/v2/permissions.deletePermission
+    - POST https://api.unkey.com/v2/permissions.createRole
+    - POST https://api.unkey.com/v2/permissions.getRole
+    - POST https://api.unkey.com/v2/permissions.listRoles
+    - POST https://api.unkey.com/v2/permissions.deleteRole
+    - POST https://api.unkey.com/v2/analytics.getVerifications
+    - POST https://api.unkey.com/v2/deploy.createDeployment
+    - POST https://api.unkey.com/v2/deploy.getDeployment
+    - POST https://api.unkey.com/v2/liveness
+  endpointsModeled:
+    - POST https://api.unkey.dev/v1/keys.verifyKey
+    - POST https://api.unkey.dev/v1/keys.createKey
+    - POST https://api.unkey.dev/v1/ratelimits.limit
+    - POST https://api.unkey.dev/v1/identities.create
+    - POST https://api.unkey.dev/v1/permissions.create
+  endpointsModeledNote: |
+    The v1 endpoints above are documented by Unkey as the legacy surface and are
+    listed as a second (legacy) server in the OpenAPI. They were confirmed to
+    exist from Unkey docs and the v1-to-v2 migration guide, but this entry
+    models the current v2 paths in detail rather than enumerating every v1 path.
+sources:
+  - url: https://www.unkey.com/docs/api-reference/overview
+    type: Documentation
+    note: RPC-style v2 API, base https://api.unkey.com, Bearer root-key auth, consistent response envelope. No WebSocket mentioned.
+  - url: https://www.unkey.com/docs/api-reference/keys/verify
+    type: APIReference
+    note: keys.verifyKey - the hot-path verification endpoint. HTTP POST.
+  - url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+    type: APIReference
+    note: Standalone ratelimit.limit endpoint. HTTP POST.
+  - url: https://www.unkey.com/docs/api-reference/v1/migration/ratelimiting
+    type: Documentation
+    note: v1-to-v2 migration guide confirming the legacy /v1/ratelimits.* surface at api.unkey.dev.
+  - url: https://github.com/unkeyed/unkey
+    type: SourceCode
+    note: Open-source (AGPL-3.0) platform, self-hostable, written primarily in Go.
+  - url: https://www.unkey.com/pricing
+    type: Pricing
+    note: Subscription + usage-based (compute/memory/egress) pricing with included monthly credits per tier.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Unkey's public API is entirely
+    request/response REST (RPC-style, all POST). No AsyncAPI document was created
+    because there is no server-push transport (WebSocket or SSE) on Unkey's own
+    API to model; event delivery to customers happens via outbound webhooks,
+    which are ordinary HTTP callbacks handled on the customer endpoint.
+  overlapNote: |
+    A separate catalog entry exists under the slug `unkey`. This `unkey-dev`
+    entry is a distinct, freshly researched build that breaks Unkey's surface
+    into nine per-namespace APIs grounded in the published v2 OpenAPI. The two
+    overlap in subject matter by design.

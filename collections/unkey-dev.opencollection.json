@@ -1,0 +1,266 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unkey API",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{rootKey}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Keys", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.createKey", "body": { "type": "json", "data": "{\n  \"apiId\": \"api_xxx\",\n  \"prefix\": \"acme\",\n  \"externalId\": \"user_123\"\n}" } },
+          "docs": "Creates a new API key in an API namespace. Returns the plaintext key once."
+        },
+        {
+          "info": { "name": "Verify a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.verifyKey", "body": { "type": "json", "data": "{\n  \"key\": \"acme_xxx\"\n}" } },
+          "docs": "Verifies an API key on the request hot path, checking validity, credits, ratelimits, permissions, and roles."
+        },
+        {
+          "info": { "name": "Get a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.getKey", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\"\n}" } },
+          "docs": "Retrieves metadata about a single key by its keyId."
+        },
+        {
+          "info": { "name": "Update a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.updateKey", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\"\n}" } },
+          "docs": "Updates a key's mutable attributes such as name, meta, expiration, credits, permissions, and roles."
+        },
+        {
+          "info": { "name": "Delete a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.deleteKey", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\"\n}" } },
+          "docs": "Deletes a key so it can no longer be verified."
+        },
+        {
+          "info": { "name": "Reroll a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.rerollKey", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\"\n}" } },
+          "docs": "Rotates a key by creating a new secret while preserving its configuration and identity."
+        },
+        {
+          "info": { "name": "Update key credits.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.updateCredits", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\",\n  \"value\": 100\n}" } },
+          "docs": "Sets, increments, or decrements the remaining usage credits on a key."
+        },
+        {
+          "info": { "name": "Who am I.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.whoami", "body": { "type": "json", "data": "{\n  \"key\": \"acme_xxx\"\n}" } },
+          "docs": "Resolves a plaintext key to its keyId and metadata without a full verification."
+        },
+        {
+          "info": { "name": "Migrate keys.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.migrateKeys", "body": { "type": "json", "data": "{\n  \"apiId\": \"api_xxx\",\n  \"keys\": []\n}" } },
+          "docs": "Bulk-imports existing keys from another system into an Unkey namespace."
+        },
+        {
+          "info": { "name": "Add permissions to a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.addPermissions", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\",\n  \"permissions\": []\n}" } },
+          "docs": "Attaches one or more permissions to a key."
+        },
+        {
+          "info": { "name": "Remove permissions from a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.removePermissions", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\",\n  \"permissions\": []\n}" } },
+          "docs": "Detaches one or more permissions from a key."
+        },
+        {
+          "info": { "name": "Set key permissions.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.setPermissions", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\",\n  \"permissions\": []\n}" } },
+          "docs": "Replaces the full set of permissions on a key."
+        },
+        {
+          "info": { "name": "Add roles to a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.addRoles", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\",\n  \"roles\": []\n}" } },
+          "docs": "Attaches one or more roles to a key."
+        },
+        {
+          "info": { "name": "Remove roles from a key.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.removeRoles", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\",\n  \"roles\": []\n}" } },
+          "docs": "Detaches one or more roles from a key."
+        },
+        {
+          "info": { "name": "Set key roles.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/keys.setRoles", "body": { "type": "json", "data": "{\n  \"keyId\": \"key_xxx\",\n  \"roles\": []\n}" } },
+          "docs": "Replaces the full set of roles on a key."
+        }
+      ]
+    },
+    {
+      "info": { "name": "APIs", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create an API.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/apis.createApi", "body": { "type": "json", "data": "{\n  \"name\": \"my-api\"\n}" } },
+          "docs": "Creates a new API (namespace / keyspace)."
+        },
+        {
+          "info": { "name": "Get an API.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/apis.getApi", "body": { "type": "json", "data": "{\n  \"apiId\": \"api_xxx\"\n}" } },
+          "docs": "Retrieves an API namespace by its apiId."
+        },
+        {
+          "info": { "name": "Delete an API.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/apis.deleteApi", "body": { "type": "json", "data": "{\n  \"apiId\": \"api_xxx\"\n}" } },
+          "docs": "Deletes an API namespace."
+        },
+        {
+          "info": { "name": "List keys for an API.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/apis.listKeys", "body": { "type": "json", "data": "{\n  \"apiId\": \"api_xxx\"\n}" } },
+          "docs": "Lists the keys belonging to an API namespace, with cursor pagination."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Ratelimit", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Ratelimit.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/ratelimit.limit", "body": { "type": "json", "data": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\",\n  \"limit\": 100,\n  \"duration\": 60000\n}" } },
+          "docs": "Checks and enforces a rate limit for an identifier within a namespace. Works without an API key."
+        },
+        {
+          "info": { "name": "Multi ratelimit.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/ratelimit.multiLimit", "body": { "type": "json", "data": "{\n  \"ratelimits\": []\n}" } },
+          "docs": "Evaluates several rate limits in a single request."
+        },
+        {
+          "info": { "name": "Set ratelimit override.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/ratelimit.setOverride", "body": { "type": "json", "data": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\",\n  \"limit\": 500,\n  \"duration\": 60000\n}" } },
+          "docs": "Sets a per-identifier override of the limit and duration within a namespace."
+        },
+        {
+          "info": { "name": "Get ratelimit override.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/ratelimit.getOverride", "body": { "type": "json", "data": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\"\n}" } },
+          "docs": "Retrieves a rate limit override for an identifier in a namespace."
+        },
+        {
+          "info": { "name": "List ratelimit overrides.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/ratelimit.listOverrides", "body": { "type": "json", "data": "{\n  \"namespace\": \"requests\"\n}" } },
+          "docs": "Lists the rate limit overrides configured in a namespace, with cursor pagination."
+        },
+        {
+          "info": { "name": "Delete ratelimit override.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/ratelimit.deleteOverride", "body": { "type": "json", "data": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\"\n}" } },
+          "docs": "Deletes a rate limit override for an identifier in a namespace."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Identities", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create an identity.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/identities.createIdentity", "body": { "type": "json", "data": "{\n  \"externalId\": \"org_123\"\n}" } },
+          "docs": "Creates an identity representing a user, tenant, or organization, keyed by an externalId."
+        },
+        {
+          "info": { "name": "Get an identity.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/identities.getIdentity", "body": { "type": "json", "data": "{\n  \"externalId\": \"org_123\"\n}" } },
+          "docs": "Retrieves an identity by its identityId or externalId."
+        },
+        {
+          "info": { "name": "List identities.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/identities.listIdentities", "body": { "type": "json", "data": "{}" } },
+          "docs": "Lists identities in the workspace, with cursor pagination."
+        },
+        {
+          "info": { "name": "Update an identity.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/identities.updateIdentity", "body": { "type": "json", "data": "{\n  \"externalId\": \"org_123\"\n}" } },
+          "docs": "Updates an identity's meta and shared ratelimits."
+        },
+        {
+          "info": { "name": "Delete an identity.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/identities.deleteIdentity", "body": { "type": "json", "data": "{\n  \"externalId\": \"org_123\"\n}" } },
+          "docs": "Deletes an identity and detaches it from its keys."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Permissions", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a permission.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.createPermission", "body": { "type": "json", "data": "{\n  \"name\": \"documents.read\"\n}" } },
+          "docs": "Creates a permission that can be attached to keys and roles."
+        },
+        {
+          "info": { "name": "Get a permission.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.getPermission", "body": { "type": "json", "data": "{\n  \"permissionId\": \"perm_xxx\"\n}" } },
+          "docs": "Retrieves a permission by id or name."
+        },
+        {
+          "info": { "name": "List permissions.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.listPermissions", "body": { "type": "json", "data": "{}" } },
+          "docs": "Lists permissions in the workspace, with cursor pagination."
+        },
+        {
+          "info": { "name": "Delete a permission.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.deletePermission", "body": { "type": "json", "data": "{\n  \"permissionId\": \"perm_xxx\"\n}" } },
+          "docs": "Deletes a permission and removes it from keys and roles."
+        },
+        {
+          "info": { "name": "Create a role.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.createRole", "body": { "type": "json", "data": "{\n  \"name\": \"editor\"\n}" } },
+          "docs": "Creates a role, a named bundle of permissions."
+        },
+        {
+          "info": { "name": "Get a role.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.getRole", "body": { "type": "json", "data": "{\n  \"roleId\": \"role_xxx\"\n}" } },
+          "docs": "Retrieves a role and its permissions by id or name."
+        },
+        {
+          "info": { "name": "List roles.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.listRoles", "body": { "type": "json", "data": "{}" } },
+          "docs": "Lists roles in the workspace, with cursor pagination."
+        },
+        {
+          "info": { "name": "Delete a role.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/permissions.deleteRole", "body": { "type": "json", "data": "{\n  \"roleId\": \"role_xxx\"\n}" } },
+          "docs": "Deletes a role and detaches it from keys."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Analytics", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get verifications.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/analytics.getVerifications", "body": { "type": "json", "data": "{\n  \"apiId\": \"api_xxx\"\n}" } },
+          "docs": "Queries key-verification analytics over a time range for usage, billing, and abuse detection."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Deploy", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Create a deployment.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/deploy.createDeployment", "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a deployment on the Unkey deploy platform."
+        },
+        {
+          "info": { "name": "Get a deployment.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/deploy.getDeployment", "body": { "type": "json", "data": "{\n  \"deploymentId\": \"dep_xxx\"\n}" } },
+          "docs": "Retrieves a deployment by its id."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Liveness", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Liveness check.", "type": "http" },
+          "http": { "method": "POST", "url": "https://api.unkey.com/v2/liveness" },
+          "docs": "Simple health check that returns a 200 when the API is available."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,478 @@
+{
+  "info": {
+    "name": "Unkey API",
+    "description": "RPC-style REST API for Unkey, the open-source developer platform for API key management, authentication, and rate limiting. All operations use POST and are grouped into service namespaces (keys, apis, ratelimit, identities, permissions, analytics, deploy, liveness). Stable v2 base URL: https://api.unkey.com (legacy v1 at https://api.unkey.dev). Authenticate with a root key: Authorization: Bearer unkey_xxx.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{rootKey}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.unkey.com", "type": "string" },
+    { "key": "rootKey", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Keys",
+      "item": [
+        {
+          "name": "Create a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"apiId\": \"api_xxx\",\n  \"prefix\": \"acme\",\n  \"externalId\": \"user_123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.createKey", "host": ["{{baseUrl}}"], "path": ["v2", "keys.createKey"] },
+            "description": "Creates a new API key in an API namespace. Returns the plaintext key once."
+          }
+        },
+        {
+          "name": "Verify a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"key\": \"acme_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.verifyKey", "host": ["{{baseUrl}}"], "path": ["v2", "keys.verifyKey"] },
+            "description": "Verifies an API key on the request hot path, checking validity, credits, ratelimits, permissions, and roles."
+          }
+        },
+        {
+          "name": "Get a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.getKey", "host": ["{{baseUrl}}"], "path": ["v2", "keys.getKey"] },
+            "description": "Retrieves metadata about a single key by its keyId."
+          }
+        },
+        {
+          "name": "Update a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.updateKey", "host": ["{{baseUrl}}"], "path": ["v2", "keys.updateKey"] },
+            "description": "Updates a key's mutable attributes such as name, meta, expiration, credits, permissions, and roles."
+          }
+        },
+        {
+          "name": "Delete a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.deleteKey", "host": ["{{baseUrl}}"], "path": ["v2", "keys.deleteKey"] },
+            "description": "Deletes a key so it can no longer be verified."
+          }
+        },
+        {
+          "name": "Reroll a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.rerollKey", "host": ["{{baseUrl}}"], "path": ["v2", "keys.rerollKey"] },
+            "description": "Rotates a key by creating a new secret while preserving its configuration and identity."
+          }
+        },
+        {
+          "name": "Update key credits",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\",\n  \"value\": 100\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.updateCredits", "host": ["{{baseUrl}}"], "path": ["v2", "keys.updateCredits"] },
+            "description": "Sets, increments, or decrements the remaining usage credits on a key."
+          }
+        },
+        {
+          "name": "Who am I",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"key\": \"acme_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.whoami", "host": ["{{baseUrl}}"], "path": ["v2", "keys.whoami"] },
+            "description": "Resolves a plaintext key to its keyId and metadata without a full verification."
+          }
+        },
+        {
+          "name": "Migrate keys",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"apiId\": \"api_xxx\",\n  \"keys\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.migrateKeys", "host": ["{{baseUrl}}"], "path": ["v2", "keys.migrateKeys"] },
+            "description": "Bulk-imports existing keys from another system into an Unkey namespace."
+          }
+        },
+        {
+          "name": "Add permissions to a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\",\n  \"permissions\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.addPermissions", "host": ["{{baseUrl}}"], "path": ["v2", "keys.addPermissions"] },
+            "description": "Attaches one or more permissions to a key."
+          }
+        },
+        {
+          "name": "Remove permissions from a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\",\n  \"permissions\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.removePermissions", "host": ["{{baseUrl}}"], "path": ["v2", "keys.removePermissions"] },
+            "description": "Detaches one or more permissions from a key."
+          }
+        },
+        {
+          "name": "Set key permissions",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\",\n  \"permissions\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.setPermissions", "host": ["{{baseUrl}}"], "path": ["v2", "keys.setPermissions"] },
+            "description": "Replaces the full set of permissions on a key."
+          }
+        },
+        {
+          "name": "Add roles to a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\",\n  \"roles\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.addRoles", "host": ["{{baseUrl}}"], "path": ["v2", "keys.addRoles"] },
+            "description": "Attaches one or more roles to a key."
+          }
+        },
+        {
+          "name": "Remove roles from a key",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\",\n  \"roles\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.removeRoles", "host": ["{{baseUrl}}"], "path": ["v2", "keys.removeRoles"] },
+            "description": "Detaches one or more roles from a key."
+          }
+        },
+        {
+          "name": "Set key roles",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"keyId\": \"key_xxx\",\n  \"roles\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/keys.setRoles", "host": ["{{baseUrl}}"], "path": ["v2", "keys.setRoles"] },
+            "description": "Replaces the full set of roles on a key."
+          }
+        }
+      ]
+    },
+    {
+      "name": "APIs",
+      "item": [
+        {
+          "name": "Create an API",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"my-api\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/apis.createApi", "host": ["{{baseUrl}}"], "path": ["v2", "apis.createApi"] },
+            "description": "Creates a new API (namespace / keyspace)."
+          }
+        },
+        {
+          "name": "Get an API",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"apiId\": \"api_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/apis.getApi", "host": ["{{baseUrl}}"], "path": ["v2", "apis.getApi"] },
+            "description": "Retrieves an API namespace by its apiId."
+          }
+        },
+        {
+          "name": "Delete an API",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"apiId\": \"api_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/apis.deleteApi", "host": ["{{baseUrl}}"], "path": ["v2", "apis.deleteApi"] },
+            "description": "Deletes an API namespace."
+          }
+        },
+        {
+          "name": "List keys for an API",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"apiId\": \"api_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/apis.listKeys", "host": ["{{baseUrl}}"], "path": ["v2", "apis.listKeys"] },
+            "description": "Lists the keys belonging to an API namespace, with cursor pagination."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ratelimit",
+      "item": [
+        {
+          "name": "Ratelimit",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\",\n  \"limit\": 100,\n  \"duration\": 60000\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/ratelimit.limit", "host": ["{{baseUrl}}"], "path": ["v2", "ratelimit.limit"] },
+            "description": "Checks and enforces a rate limit for an identifier within a namespace. Works without an API key."
+          }
+        },
+        {
+          "name": "Multi ratelimit",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"ratelimits\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/ratelimit.multiLimit", "host": ["{{baseUrl}}"], "path": ["v2", "ratelimit.multiLimit"] },
+            "description": "Evaluates several rate limits in a single request."
+          }
+        },
+        {
+          "name": "Set ratelimit override",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\",\n  \"limit\": 500,\n  \"duration\": 60000\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/ratelimit.setOverride", "host": ["{{baseUrl}}"], "path": ["v2", "ratelimit.setOverride"] },
+            "description": "Sets a per-identifier override of the limit and duration within a namespace."
+          }
+        },
+        {
+          "name": "Get ratelimit override",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/ratelimit.getOverride", "host": ["{{baseUrl}}"], "path": ["v2", "ratelimit.getOverride"] },
+            "description": "Retrieves a rate limit override for an identifier in a namespace."
+          }
+        },
+        {
+          "name": "List ratelimit overrides",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"namespace\": \"requests\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/ratelimit.listOverrides", "host": ["{{baseUrl}}"], "path": ["v2", "ratelimit.listOverrides"] },
+            "description": "Lists the rate limit overrides configured in a namespace, with cursor pagination."
+          }
+        },
+        {
+          "name": "Delete ratelimit override",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"namespace\": \"requests\",\n  \"identifier\": \"user_123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/ratelimit.deleteOverride", "host": ["{{baseUrl}}"], "path": ["v2", "ratelimit.deleteOverride"] },
+            "description": "Deletes a rate limit override for an identifier in a namespace."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Identities",
+      "item": [
+        {
+          "name": "Create an identity",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"externalId\": \"org_123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/identities.createIdentity", "host": ["{{baseUrl}}"], "path": ["v2", "identities.createIdentity"] },
+            "description": "Creates an identity representing a user, tenant, or organization, keyed by an externalId."
+          }
+        },
+        {
+          "name": "Get an identity",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"externalId\": \"org_123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/identities.getIdentity", "host": ["{{baseUrl}}"], "path": ["v2", "identities.getIdentity"] },
+            "description": "Retrieves an identity by its identityId or externalId."
+          }
+        },
+        {
+          "name": "List identities",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/v2/identities.listIdentities", "host": ["{{baseUrl}}"], "path": ["v2", "identities.listIdentities"] },
+            "description": "Lists identities in the workspace, with cursor pagination."
+          }
+        },
+        {
+          "name": "Update an identity",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"externalId\": \"org_123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/identities.updateIdentity", "host": ["{{baseUrl}}"], "path": ["v2", "identities.updateIdentity"] },
+            "description": "Updates an identity's meta and shared ratelimits."
+          }
+        },
+        {
+          "name": "Delete an identity",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"externalId\": \"org_123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/identities.deleteIdentity", "host": ["{{baseUrl}}"], "path": ["v2", "identities.deleteIdentity"] },
+            "description": "Deletes an identity and detaches it from its keys."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permissions",
+      "item": [
+        {
+          "name": "Create a permission",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"documents.read\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.createPermission", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.createPermission"] },
+            "description": "Creates a permission that can be attached to keys and roles."
+          }
+        },
+        {
+          "name": "Get a permission",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"permissionId\": \"perm_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.getPermission", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.getPermission"] },
+            "description": "Retrieves a permission by id or name."
+          }
+        },
+        {
+          "name": "List permissions",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.listPermissions", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.listPermissions"] },
+            "description": "Lists permissions in the workspace, with cursor pagination."
+          }
+        },
+        {
+          "name": "Delete a permission",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"permissionId\": \"perm_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.deletePermission", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.deletePermission"] },
+            "description": "Deletes a permission and removes it from keys and roles."
+          }
+        },
+        {
+          "name": "Create a role",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"editor\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.createRole", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.createRole"] },
+            "description": "Creates a role, a named bundle of permissions."
+          }
+        },
+        {
+          "name": "Get a role",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"roleId\": \"role_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.getRole", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.getRole"] },
+            "description": "Retrieves a role and its permissions by id or name."
+          }
+        },
+        {
+          "name": "List roles",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.listRoles", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.listRoles"] },
+            "description": "Lists roles in the workspace, with cursor pagination."
+          }
+        },
+        {
+          "name": "Delete a role",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"roleId\": \"role_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/permissions.deleteRole", "host": ["{{baseUrl}}"], "path": ["v2", "permissions.deleteRole"] },
+            "description": "Deletes a role and detaches it from keys."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Get verifications",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"apiId\": \"api_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/analytics.getVerifications", "host": ["{{baseUrl}}"], "path": ["v2", "analytics.getVerifications"] },
+            "description": "Queries key-verification analytics over a time range for usage, billing, and abuse detection."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deploy",
+      "item": [
+        {
+          "name": "Create a deployment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/v2/deploy.createDeployment", "host": ["{{baseUrl}}"], "path": ["v2", "deploy.createDeployment"] },
+            "description": "Creates a deployment on the Unkey deploy platform."
+          }
+        },
+        {
+          "name": "Get a deployment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"deploymentId\": \"dep_xxx\"\n}" },
+            "url": { "raw": "{{baseUrl}}/v2/deploy.getDeployment", "host": ["{{baseUrl}}"], "path": ["v2", "deploy.getDeployment"] },
+            "description": "Retrieves a deployment by its id."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Liveness",
+      "item": [
+        {
+          "name": "Liveness check",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/v2/liveness", "host": ["{{baseUrl}}"], "path": ["v2", "liveness"] },
+            "description": "Simple health check that returns a 200 when the API is available."
+          }
+        }
+      ]
+    }
+  ]
+}

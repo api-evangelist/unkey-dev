@@ -1,0 +1,73 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Unkey
+providerId: unkey-dev
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- API Keys
+- Rate Limiting
+- Authentication
+- Rate Limiting
+- Quotas
+description: >-
+  Two distinct notions of rate limiting apply to Unkey. First, Unkey's own
+  management API (api.unkey.com / api.unkey.dev) is subject to workspace rate
+  limits that scale with plan tier; commonly cited figures are on the order of
+  ~60 requests/second on the Free tier rising to ~600 requests/second on paid
+  tiers, but exact numbers are set per workspace and should be confirmed against
+  current documentation. Second, and more importantly, rate limiting is a
+  first-class product: the ratelimit.* endpoints let you define and enforce your
+  own fixed-window limits for any identifier, independent of API keys, including
+  per-identifier overrides within a namespace. Per-key ratelimits can also be
+  attached at key creation or verification time.
+notes: >-
+  Unkey does not prominently publish a single fixed numeric management-API rate
+  limit; workspace limits vary by plan. Throttled responses return HTTP 429.
+  Verify current management-API limits and default product ratelimit windows in
+  the Unkey docs during reconciliation.
+sources:
+- https://www.unkey.com/docs/api-reference/overview
+- https://www.unkey.com/docs/api-reference/ratelimits/limit
+- https://www.unkey.com/pricing
+- https://github.com/unkeyed/unkey
+responseCodes:
+  throttled: 429
+limits:
+- name: Management API Requests (Free)
+  scope: workspace
+  metric: requests
+  limit: ~60 req/sec (indicative; confirm per workspace)
+  notes: Workspace rate limit for the Unkey management API on the Free tier.
+- name: Management API Requests (Paid)
+  scope: workspace
+  metric: requests
+  limit: ~600 req/sec (indicative; confirm per workspace)
+  notes: Higher workspace rate limit for the Unkey management API on paid tiers.
+- name: Per-Key Ratelimit
+  scope: key
+  metric: requests
+  limit: configurable (limit + duration per key)
+  notes: Fixed-window ratelimit attachable to an individual key, enforced during keys.verifyKey.
+- name: Product Ratelimit (ratelimit.limit)
+  scope: identifier
+  metric: requests
+  limit: configurable per namespace (limit + duration)
+  notes: Standalone rate limiting for any identifier via ratelimit.limit / multiLimit, independent of API keys.
+- name: Ratelimit Overrides
+  scope: identifier
+  metric: requests
+  limit: configurable per override
+  notes: Per-identifier overrides of limit and duration within a namespace (set/get/list/delete override).
+policies:
+- name: Fixed Window
+  description: Unkey ships per-key and standalone ratelimits as fixed-window counters over a configurable duration.
+- name: Overrides
+  description: Specific identifiers can be granted higher or lower limits than the namespace default via ratelimit.setOverride.
+- name: Backoff Strategy
+  description: Clients should honor 429 responses and the returned reset/remaining values, applying exponential backoff with jitter.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
