@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/unkey-dev-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: rootKey
+  type: http
+  scheme: bearer
+  description: 'HTTP Bearer authentication with an Unkey root key, passed as `Authorization:
+    Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key.'
+  sources:
+  - openapi/unkey-dev-openapi.yml

@@ -216,6 +216,10 @@ apis:
   description: Simple health-check endpoint (liveness) for verifying API
     availability from monitors and load balancers.
 common:
+- type: DomainSecurity
+  url: security/unkey-dev-domain-security.yml
+- type: Authentication
+  url: authentication/unkey-dev-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/unkeyed
 - type: LinkedIn
@@ -230,6 +234,8 @@ common:
   url: rate-limits/unkey-dev-rate-limits.yml
 - type: FinOps
   url: finops/unkey-dev-finops.yml
+- type: Blog
+  url: https://www.unkey.com/blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
