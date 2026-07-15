@@ -216,6 +216,8 @@ apis:
   description: Simple health-check endpoint (liveness) for verifying API
     availability from monitors and load balancers.
 common:
+- type: AgenticAccess
+  url: agentic-access/unkey-dev-agentic-access.yml
 - type: DomainSecurity
   url: security/unkey-dev-domain-security.yml
 - type: Authentication
