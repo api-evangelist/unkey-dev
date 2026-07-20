@@ -9,6 +9,6 @@ schemes:
   type: http
   scheme: bearer
   description: 'HTTP Bearer authentication with an Unkey root key, passed as `Authorization:
-    Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key.'
+    Bearer [example key]`. Most endpoints require specific permissions on the root key.'
   sources:
   - openapi/unkey-dev-openapi.yml
