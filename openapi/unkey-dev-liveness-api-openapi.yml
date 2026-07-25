@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: Unkey analytics liveness API
+  description: 'Unkey is an open-source developer platform for API key management, authentication, and rate limiting. This is an API Evangelist modeling of Unkey''s RPC-style REST API, grounded in Unkey''s own published OpenAPI. All operations use POST and are grouped into service namespaces (keys, apis, ratelimit, identities, permissions, analytics, deploy, liveness). The stable v2 API is served from https://api.unkey.com; the legacy v1 API is served from https://api.unkey.dev with /v1/* paths.
+
+
+    Authentication uses HTTP Bearer authentication with a root key: `Authorization: Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key. Responses use a consistent envelope with a `meta.requestId`, a `data` object (or array plus `pagination` on list endpoints), and a structured `error` object on failures.'
+  version: 2.0.0
+  contact:
+    name: Unkey
+    url: https://www.unkey.com
+  license:
+    name: AGPL-3.0
+    url: https://github.com/unkeyed/unkey/blob/main/LICENSE.md
+servers:
+- url: https://api.unkey.com
+  description: Unkey v2 (current)
+- url: https://api.unkey.dev
+  description: Unkey v1 (legacy)
+security:
+- rootKey: []
+tags:
+- name: liveness
+  description: Health check operations.
+paths:
+  /v2/liveness:
+    post:
+      operationId: liveness
+      tags:
+      - liveness
+      summary: Liveness check
+      description: Simple health check that returns a 200 when the API is available.
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+components:
+  responses:
+    Success:
+      description: Successful response using the standard Unkey envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessEnvelope'
+  schemas:
+    SuccessEnvelope:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: object
+          additionalProperties: true
+    Meta:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: Unique identifier for this request, useful for support and tracing.
+  securitySchemes:
+    rootKey:
+      type: http
+      scheme: bearer
+      description: 'HTTP Bearer authentication with an Unkey root key, passed as `Authorization: Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key.'

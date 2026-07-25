@@ -1,0 +1,219 @@
+openapi: 3.1.0
+info:
+  title: Unkey analytics identities API
+  description: 'Unkey is an open-source developer platform for API key management, authentication, and rate limiting. This is an API Evangelist modeling of Unkey''s RPC-style REST API, grounded in Unkey''s own published OpenAPI. All operations use POST and are grouped into service namespaces (keys, apis, ratelimit, identities, permissions, analytics, deploy, liveness). The stable v2 API is served from https://api.unkey.com; the legacy v1 API is served from https://api.unkey.dev with /v1/* paths.
+
+
+    Authentication uses HTTP Bearer authentication with a root key: `Authorization: Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key. Responses use a consistent envelope with a `meta.requestId`, a `data` object (or array plus `pagination` on list endpoints), and a structured `error` object on failures.'
+  version: 2.0.0
+  contact:
+    name: Unkey
+    url: https://www.unkey.com
+  license:
+    name: AGPL-3.0
+    url: https://github.com/unkeyed/unkey/blob/main/LICENSE.md
+servers:
+- url: https://api.unkey.com
+  description: Unkey v2 (current)
+- url: https://api.unkey.dev
+  description: Unkey v1 (legacy)
+security:
+- rootKey: []
+tags:
+- name: identities
+  description: Identity (tenant / user) management operations.
+paths:
+  /v2/identities.createIdentity:
+    post:
+      operationId: identities.createIdentity
+      tags:
+      - identities
+      summary: Create an identity
+      description: Creates an identity representing a user, tenant, or organization, keyed by an externalId, with optional meta and shared ratelimits that all of the identity's keys inherit.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/identities.getIdentity:
+    post:
+      operationId: identities.getIdentity
+      tags:
+      - identities
+      summary: Get an identity
+      description: Retrieves an identity by its identityId or externalId.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/identities.listIdentities:
+    post:
+      operationId: identities.listIdentities
+      tags:
+      - identities
+      summary: List identities
+      description: Lists identities in the workspace, with cursor pagination.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaginatedSuccess'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/identities.updateIdentity:
+    post:
+      operationId: identities.updateIdentity
+      tags:
+      - identities
+      summary: Update an identity
+      description: Updates an identity's meta and shared ratelimits.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/identities.deleteIdentity:
+    post:
+      operationId: identities.deleteIdentity
+      tags:
+      - identities
+      summary: Delete an identity
+      description: Deletes an identity and detaches it from its keys.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid root key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    Success:
+      description: Successful response using the standard Unkey envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessEnvelope'
+    PaginatedSuccess:
+      description: Successful list response with cursor pagination.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaginatedEnvelope'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  schemas:
+    PaginatedEnvelope:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    ErrorEnvelope:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        error:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Human-readable error summary.
+            detail:
+              type: string
+              description: Specific description of what went wrong.
+            status:
+              type: integer
+              description: HTTP status code.
+            type:
+              type: string
+              format: uri
+              description: Link to error documentation.
+            errors:
+              type: array
+              description: Array of validation errors (for 400 responses).
+              items:
+                type: object
+                additionalProperties: true
+    GenericRequest:
+      type: object
+      description: Request body for an RPC-style operation. The concrete fields depend on the operation (for example keyId, apiId, key, namespace, identifier, externalId, permissions, roles). See the Unkey API reference for the per-operation schema.
+      additionalProperties: true
+    SuccessEnvelope:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: object
+          additionalProperties: true
+    Meta:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: Unique identifier for this request, useful for support and tracing.
+    Pagination:
+      type: object
+      properties:
+        cursor:
+          type: string
+          description: Token for requesting the next page.
+        hasMore:
+          type: boolean
+          description: Whether more results are available.
+  securitySchemes:
+    rootKey:
+      type: http
+      scheme: bearer
+      description: 'HTTP Bearer authentication with an Unkey root key, passed as `Authorization: Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key.'

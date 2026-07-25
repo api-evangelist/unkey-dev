@@ -1,0 +1,394 @@
+openapi: 3.1.0
+info:
+  title: Unkey analytics keys API
+  description: 'Unkey is an open-source developer platform for API key management, authentication, and rate limiting. This is an API Evangelist modeling of Unkey''s RPC-style REST API, grounded in Unkey''s own published OpenAPI. All operations use POST and are grouped into service namespaces (keys, apis, ratelimit, identities, permissions, analytics, deploy, liveness). The stable v2 API is served from https://api.unkey.com; the legacy v1 API is served from https://api.unkey.dev with /v1/* paths.
+
+
+    Authentication uses HTTP Bearer authentication with a root key: `Authorization: Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key. Responses use a consistent envelope with a `meta.requestId`, a `data` object (or array plus `pagination` on list endpoints), and a structured `error` object on failures.'
+  version: 2.0.0
+  contact:
+    name: Unkey
+    url: https://www.unkey.com
+  license:
+    name: AGPL-3.0
+    url: https://github.com/unkeyed/unkey/blob/main/LICENSE.md
+servers:
+- url: https://api.unkey.com
+  description: Unkey v2 (current)
+- url: https://api.unkey.dev
+  description: Unkey v1 (legacy)
+security:
+- rootKey: []
+tags:
+- name: keys
+  description: API key management operations.
+paths:
+  /v2/keys.createKey:
+    post:
+      operationId: keys.createKey
+      tags:
+      - keys
+      summary: Create a key
+      description: Creates a new API key in a given API (namespace). Supports name, prefix, byteLength, externalId (identity link), meta, expiration, remaining usage credits, refill, ratelimits, permissions, and roles. Returns the plaintext key once and its keyId.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /v2/keys.verifyKey:
+    post:
+      operationId: keys.verifyKey
+      tags:
+      - keys
+      summary: Verify a key
+      description: Verifies an API key on the request hot path. Checks validity, expiration, remaining credits, ratelimits, permissions, and roles, and returns the key's metadata plus any linked identity. This is the endpoint API providers call on every incoming request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.getKey:
+    post:
+      operationId: keys.getKey
+      tags:
+      - keys
+      summary: Get a key
+      description: Retrieves metadata about a single key by its keyId.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/keys.updateKey:
+    post:
+      operationId: keys.updateKey
+      tags:
+      - keys
+      summary: Update a key
+      description: Updates a key's mutable attributes - name, meta, expiration, enabled state, external identity, ratelimits, remaining credits, permissions, and roles.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/keys.deleteKey:
+    post:
+      operationId: keys.deleteKey
+      tags:
+      - keys
+      summary: Delete a key
+      description: Permanently deletes (or soft-deletes) a key so it can no longer be verified.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/keys.rerollKey:
+    post:
+      operationId: keys.rerollKey
+      tags:
+      - keys
+      summary: Reroll a key
+      description: Rotates a key by creating a new secret while preserving the key's configuration and identity, optionally keeping the old key valid until an expiration for a smooth migration.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/keys.updateCredits:
+    post:
+      operationId: keys.updateCredits
+      tags:
+      - keys
+      summary: Update key credits
+      description: Sets, increments, or decrements the remaining usage credits on a key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/keys.whoami:
+    post:
+      operationId: keys.whoami
+      tags:
+      - keys
+      summary: Who am I
+      description: Resolves a plaintext key to its keyId and metadata without a full verification.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.migrateKeys:
+    post:
+      operationId: keys.migrateKeys
+      tags:
+      - keys
+      summary: Migrate keys
+      description: Bulk-imports existing keys (by hash) from another system into an Unkey namespace, preserving prefixes and metadata so customers keep their current keys.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.addPermissions:
+    post:
+      operationId: keys.addPermissions
+      tags:
+      - keys
+      summary: Add permissions to a key
+      description: Attaches one or more permissions to a key, creating them if requested.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.removePermissions:
+    post:
+      operationId: keys.removePermissions
+      tags:
+      - keys
+      summary: Remove permissions from a key
+      description: Detaches one or more permissions from a key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.setPermissions:
+    post:
+      operationId: keys.setPermissions
+      tags:
+      - keys
+      summary: Set key permissions
+      description: Replaces the full set of permissions on a key with the provided list.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.addRoles:
+    post:
+      operationId: keys.addRoles
+      tags:
+      - keys
+      summary: Add roles to a key
+      description: Attaches one or more roles to a key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.removeRoles:
+    post:
+      operationId: keys.removeRoles
+      tags:
+      - keys
+      summary: Remove roles from a key
+      description: Detaches one or more roles from a key.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/keys.setRoles:
+    post:
+      operationId: keys.setRoles
+      tags:
+      - keys
+      summary: Set key roles
+      description: Replaces the full set of roles on a key with the provided list.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Forbidden:
+      description: The root key lacks the permission required for this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    Unauthorized:
+      description: Missing or invalid root key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    Success:
+      description: Successful response using the standard Unkey envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessEnvelope'
+    BadRequest:
+      description: The request payload failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  schemas:
+    ErrorEnvelope:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        error:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Human-readable error summary.
+            detail:
+              type: string
+              description: Specific description of what went wrong.
+            status:
+              type: integer
+              description: HTTP status code.
+            type:
+              type: string
+              format: uri
+              description: Link to error documentation.
+            errors:
+              type: array
+              description: Array of validation errors (for 400 responses).
+              items:
+                type: object
+                additionalProperties: true
+    GenericRequest:
+      type: object
+      description: Request body for an RPC-style operation. The concrete fields depend on the operation (for example keyId, apiId, key, namespace, identifier, externalId, permissions, roles). See the Unkey API reference for the per-operation schema.
+      additionalProperties: true
+    SuccessEnvelope:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        data:
+          type: object
+          additionalProperties: true
+    Meta:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: Unique identifier for this request, useful for support and tracing.
+  securitySchemes:
+    rootKey:
+      type: http
+      scheme: bearer
+      description: 'HTTP Bearer authentication with an Unkey root key, passed as `Authorization: Bearer unkey_xxxxxxxxxxx`. Most endpoints require specific permissions on the root key.'
