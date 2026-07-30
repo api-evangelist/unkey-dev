@@ -9,7 +9,20 @@ description: Unkey is an open-source developer platform for modern APIs, providi
   limiting, identities, RBAC, and key-verification analytics. Unkey exposes an
   RPC-style REST API (all POST) with a stable v2 at api.unkey.com and a legacy v1 at
   api.unkey.dev, authenticated with Bearer root keys.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/unkey-dev.png
 tags:
 - API Keys
 - Rate Limiting
@@ -23,198 +36,246 @@ created: '2026-07-02'
 modified: '2026-07-02'
 specificationVersion: '0.19'
 apis:
-- aid: unkey-dev:unkey-dev-keys-api
-  name: Unkey Keys API
-  tags:
-  - API Keys
-  - Verification
-  - Lifecycle
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/keys/create
-  baseURL: https://api.unkey.com
-  properties:
-  - url: https://www.unkey.com/docs/api-reference/overview
-    type: Documentation
-  - url: https://www.unkey.com/docs/api-reference/keys/create
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Full API key lifecycle - create, verify, get, update, delete, reroll,
-    updateCredits, and whoami. Keys carry metadata, expiration, usage credits,
-    external identity links, permissions, and roles. keys.verifyKey is the hot-path
-    endpoint API providers call to authenticate and authorize each request.
-- aid: unkey-dev:unkey-dev-apis-api
-  name: Unkey APIs (Namespaces) API
-  tags:
-  - Namespaces
-  - API Management
-  - Keyspaces
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/apis/create
-  baseURL: https://api.unkey.com
-  properties:
-  - url: https://www.unkey.com/docs/api-reference/apis/create
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Manage APIs - the namespaces (keyspaces) that group and isolate keys.
-    Create, get, and delete an API, and list all keys belonging to it. Each API is
-    the container against which keys are issued and verified.
-- aid: unkey-dev:unkey-dev-ratelimit-api
-  name: Unkey Ratelimit API
-  tags:
-  - Rate Limiting
-  - Overrides
-  - Namespaces
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/ratelimits/limit
-  baseURL: https://api.unkey.com
-  properties:
-  - url: https://www.unkey.com/docs/api-reference/ratelimits/limit
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Standalone, key-independent rate limiting. Check or enforce a limit
-    for any identifier (ratelimit.limit), evaluate several limits at once
-    (multiLimit), and manage per-identifier overrides within a namespace (set, get,
-    list, delete override).
-- aid: unkey-dev:unkey-dev-identities-api
-  name: Unkey Identities API
-  tags:
-  - Identities
-  - Tenants
-  - Users
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/identities/create-identity
-  baseURL: https://api.unkey.com
-  properties:
-  - url: https://www.unkey.com/docs/api-reference/identities/create-identity
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Model your users, tenants, or organizations as identities and attach
-    multiple keys and shared rate limits to each via an externalId. Create, get,
-    list, update, and delete identities so limits and metadata follow the entity
-    rather than a single key.
-- aid: unkey-dev:unkey-dev-permissions-api
-  name: Unkey Permissions and Roles API
-  tags:
-  - RBAC
-  - Permissions
-  - Roles
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/permissions/create-permission
-  baseURL: https://api.unkey.com
-  properties:
-  - url: https://www.unkey.com/docs/api-reference/permissions/create-permission
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Role-based access control. Define permissions and roles and manage
-    their lifecycle (create, get, list, delete), then attach or detach them on keys
-    with the keys.addPermissions / setPermissions / addRoles / setRoles family so
-    verifyKey can enforce fine-grained authorization.
 - aid: unkey-dev:unkey-dev-analytics-api
-  name: Unkey Analytics API
-  tags:
-  - Analytics
-  - Verifications
-  - Usage
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/analytics/get-verifications
-  baseURL: https://api.unkey.com
-  properties:
-  - url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Query key-verification analytics (analytics.getVerifications) to
-    understand usage over time, by key, identity, or outcome. Powers usage
-    dashboards, billing, and abuse detection built on top of Unkey verifications.
-- aid: unkey-dev:unkey-dev-migrations-api
-  name: Unkey Key Migrations API
-  tags:
-  - Migration
-  - Import
-  - Bulk
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  name: Unkey analytics API
+  description: Key-verification analytics query operations.
   humanURL: https://www.unkey.com/docs/api-reference/keys/create
   baseURL: https://api.unkey.com
+  tags:
+  - analytics
   properties:
-  - url: https://www.unkey.com/docs/api-reference/keys/create
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Bulk-import existing keys from another system into an Unkey namespace
-    via keys.migrateKeys, letting providers move onto Unkey without forcing every
-    customer to rotate their key.
+  - type: OpenAPI
+    url: openapi/unkey-dev-analytics-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
+- aid: unkey-dev:unkey-dev-apis-api
+  name: Unkey apis API
+  description: API (namespace) management operations.
+  humanURL: https://www.unkey.com/docs/api-reference/keys/create
+  baseURL: https://api.unkey.com
+  tags:
+  - apis
+  properties:
+  - type: OpenAPI
+    url: openapi/unkey-dev-apis-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
 - aid: unkey-dev:unkey-dev-deploy-api
-  name: Unkey Deploy API
-  tags:
-  - Deployments
-  - Platform
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/overview
+  name: Unkey deploy API
+  description: Deployment operations.
+  humanURL: https://www.unkey.com/docs/api-reference/keys/create
   baseURL: https://api.unkey.com
+  tags:
+  - deploy
   properties:
-  - url: https://www.unkey.com/docs/api-reference/overview
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Deployment operations (deploy.createDeployment, deploy.getDeployment)
-    from Unkey's newer "ship APIs, not infrastructure" deploy platform, exposed in
-    the v2 API alongside the key-management surface.
+  - type: OpenAPI
+    url: openapi/unkey-dev-deploy-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
+- aid: unkey-dev:unkey-dev-identities-api
+  name: Unkey identities API
+  description: Identity (tenant / user) management operations.
+  humanURL: https://www.unkey.com/docs/api-reference/keys/create
+  baseURL: https://api.unkey.com
+  tags:
+  - identities
+  properties:
+  - type: OpenAPI
+    url: openapi/unkey-dev-identities-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
+- aid: unkey-dev:unkey-dev-keys-api
+  name: Unkey keys API
+  description: API key management operations.
+  humanURL: https://www.unkey.com/docs/api-reference/keys/create
+  baseURL: https://api.unkey.com
+  tags:
+  - keys
+  properties:
+  - type: OpenAPI
+    url: openapi/unkey-dev-keys-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
 - aid: unkey-dev:unkey-dev-liveness-api
-  name: Unkey Liveness API
-  tags:
-  - Health
-  - Monitoring
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://www.unkey.com/docs/api-reference/overview
+  name: Unkey liveness API
+  description: Health check operations.
+  humanURL: https://www.unkey.com/docs/api-reference/keys/create
   baseURL: https://api.unkey.com
+  tags:
+  - liveness
   properties:
-  - url: https://www.unkey.com/docs/api-reference/overview
-    type: APIReference
-  - url: openapi/unkey-dev-openapi.yml
-    type: OpenAPI
-  - url: collections/unkey-dev.postman_collection.json
-    type: PostmanCollection
-  - url: collections/unkey-dev.opencollection.json
-    type: OpenCollection
-  description: Simple health-check endpoint (liveness) for verifying API
-    availability from monitors and load balancers.
+  - type: OpenAPI
+    url: openapi/unkey-dev-liveness-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
+- aid: unkey-dev:unkey-dev-permissions-api
+  name: Unkey permissions API
+  description: Permission and role (RBAC) management operations.
+  humanURL: https://www.unkey.com/docs/api-reference/keys/create
+  baseURL: https://api.unkey.com
+  tags:
+  - permissions
+  properties:
+  - type: OpenAPI
+    url: openapi/unkey-dev-permissions-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
+- aid: unkey-dev:unkey-dev-ratelimit-api
+  name: Unkey ratelimit API
+  description: Standalone rate limiting and override operations.
+  humanURL: https://www.unkey.com/docs/api-reference/keys/create
+  baseURL: https://api.unkey.com
+  tags:
+  - ratelimit
+  properties:
+  - type: OpenAPI
+    url: openapi/unkey-dev-ratelimit-api-openapi.yml
+  - type: Documentation
+    url: https://www.unkey.com/docs/api-reference/overview
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/keys/create
+  - type: PostmanCollection
+    url: collections/unkey-dev.postman_collection.json
+  - type: OpenCollection
+    url: collections/unkey-dev.opencollection.json
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/apis/create
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/ratelimits/limit
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/identities/create-identity
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/permissions/create-permission
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/analytics/get-verifications
+  - type: APIReference
+    url: https://www.unkey.com/docs/api-reference/overview
 common:
 - type: AgenticAccess
   url: agentic-access/unkey-dev-agentic-access.yml
